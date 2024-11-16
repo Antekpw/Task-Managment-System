@@ -1,5 +1,6 @@
 package com.example.taskmanagmentsystem.entities;
 
+import com.example.taskmanagmentsystem.utils.GeneralEntity;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Nationalized;
 
@@ -8,27 +9,27 @@ import java.util.Set;
 
 @Entity
 @Table(name = "USERS")
-public class User {
+public class User implements GeneralEntity<User> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID_USER", nullable = false)
+    @Column(name = "id", nullable = false)
     private Integer id;
 
     @Nationalized
-    @Column(name = "LOGIN_NAME", nullable = false, length = 100)
-    private String loginName;
+    @Column(name = "login", nullable = false, length = 100)
+    private String login;
 
     @Nationalized
-    @Column(name = "PASSWORD_NAME", nullable = false)
-    private String passwordName;
+    @Column(name = "password", nullable = false)
+    private String password;
 
     @Nationalized
-    @Column(name = "EMAIL", nullable = false)
+    @Column(name = "email", nullable = false)
     private String email;
 
     @Nationalized
-    @Column(name = "ROLE_NAME", length = 100)
-    private String roleName;
+    @Column(name = "role", length = 100)
+    private String role;
 
     @OneToMany(mappedBy = "idUser")
     private Set<Project> projects = new LinkedHashSet<>();
@@ -36,28 +37,38 @@ public class User {
     @OneToMany(mappedBy = "idUser")
     private Set<Task> tasks = new LinkedHashSet<>();
 
-    public Integer getId() {
-        return id;
+    @Override
+    public void update(User source) {
+
+    }
+
+    public Long getId() {
+        return (long)id;
+    }
+
+    @Override
+    public User createNewInstance() {
+        return null;
     }
 
     public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getLoginName() {
-        return loginName;
+    public String getLogin() {
+        return login;
     }
 
-    public void setLoginName(String loginName) {
-        this.loginName = loginName;
+    public void setLogin(String login) {
+        this.login = login;
     }
 
-    public String getPasswordName() {
-        return passwordName;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPasswordName(String passwordName) {
-        this.passwordName = passwordName;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getEmail() {
@@ -68,12 +79,12 @@ public class User {
         this.email = email;
     }
 
-    public String getRoleName() {
-        return roleName;
+    public String getRole() {
+        return role;
     }
 
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public Set<Project> getProjects() {

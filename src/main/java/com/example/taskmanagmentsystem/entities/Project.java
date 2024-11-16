@@ -1,5 +1,6 @@
 package com.example.taskmanagmentsystem.entities;
 
+import com.example.taskmanagmentsystem.utils.GeneralEntity;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Nationalized;
 
@@ -8,53 +9,63 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "PROJECT")
-public class Project {
+@Table(name = "PROJECTS")
+public class Project implements GeneralEntity<Project> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID_PROJECT", nullable = false)
+    @Column(name = "id", nullable = false)
     private Integer id;
 
     @Nationalized
-    @Column(name = "PROJECT_NAME", nullable = false)
-    private String projectName;
+    @Column(name = "name", nullable = false)
+    private String name;
 
     @Nationalized
-    @Column(name = "DESCRIPTION_BODY", nullable = false)
-    private String descriptionBody;
+    @Column(name = "description", nullable = false)
+    private String description;
 
-    @Column(name = "CREATION_DATE", nullable = false)
+    @Column(name = "creation_date", nullable = false)
     private Instant creationDate;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ID_USER", nullable = false)
+    @JoinColumn(name = "id_user", nullable = false)
     private User idUser;
 
     @OneToMany(mappedBy = "idProject")
     private Set<Task> tasks = new LinkedHashSet<>();
 
-    public Integer getId() {
-        return id;
+    @Override
+    public void update(Project source) {
+
+    }
+
+    public Long getId() {
+        return (long)id;
+    }
+
+    @Override
+    public Project createNewInstance() {
+        return null;
     }
 
     public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getProjectName() {
-        return projectName;
+    public String getName() {
+        return name;
     }
 
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getDescriptionBody() {
-        return descriptionBody;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDescriptionBody(String descriptionBody) {
-        this.descriptionBody = descriptionBody;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Instant getCreationDate() {

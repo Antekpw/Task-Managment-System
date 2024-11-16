@@ -1,5 +1,6 @@
 package com.example.taskmanagmentsystem.entities;
 
+import com.example.taskmanagmentsystem.utils.GeneralEntity;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Nationalized;
 
@@ -7,57 +8,67 @@ import java.time.Instant;
 
 @Entity
 @Table(name = "TASK")
-public class Task {
+public class Task implements GeneralEntity<Task> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID_TASK", nullable = false)
+    @Column(name = "id", nullable = false)
     private Integer id;
 
     @Nationalized
-    @Column(name = "TASK_NAME", nullable = false)
-    private String taskName;
+    @Column(name = "name", nullable = false)
+    private String name;
 
     @Nationalized
-    @Column(name = "DESCRIPTION_BODY", nullable = false)
-    private String descriptionBody;
+    @Column(name = "description", nullable = false)
+    private String description;
 
-    @Column(name = "CREATION_DATE", nullable = false)
+    @Column(name = "creation_date", nullable = false)
     private Instant creationDate;
 
     @Nationalized
-    @Column(name = "TASK_STATUS", nullable = false)
-    private String taskStatus;
+    @Column(name = "status", nullable = false)
+    private String status;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ID_USER", nullable = false)
+    @JoinColumn(name = "id_user", nullable = false)
     private User idUser;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ID_PROJECT", nullable = false)
+    @JoinColumn(name = "id_project", nullable = false)
     private Project idProject;
 
-    public Integer getId() {
-        return id;
+    @Override
+    public void update(Task source) {
+
+    }
+
+    public Long getId() {
+        return (long) id;
+    }
+
+    @Override
+    public Task createNewInstance() {
+        return null;
     }
 
     public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getTaskName() {
-        return taskName;
+    public String getName() {
+        return name;
     }
 
-    public void setTaskName(String taskName) {
-        this.taskName = taskName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getDescriptionBody() {
-        return descriptionBody;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDescriptionBody(String descriptionBody) {
-        this.descriptionBody = descriptionBody;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Instant getCreationDate() {
@@ -68,12 +79,12 @@ public class Task {
         this.creationDate = creationDate;
     }
 
-    public String getTaskStatus() {
-        return taskStatus;
+    public String getStatus() {
+        return status;
     }
 
-    public void setTaskStatus(String taskStatus) {
-        this.taskStatus = taskStatus;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public User getIdUser() {
