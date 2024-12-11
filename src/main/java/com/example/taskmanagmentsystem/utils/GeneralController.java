@@ -23,12 +23,12 @@ public class GeneralController<T extends GeneralEntity<T>> {
     @PostMapping(path = "", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
-    public ResponseEntity<T> create(@RequestBody T created){
-        return ResponseEntity.ok(service.create(created));
+   /* public ResponseEntity<T> create(@RequestBody T created){
+        return ResponseEntity.created(service.create(created));
+    }*/
+    public T create(@RequestBody T entity){
+        return service.createEntity(entity);
     }
-//    public T create(@RequestBody T entity){
-//        return service.createEntity(entity);
-//    }
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id){
         service.deleteEntity(id);
