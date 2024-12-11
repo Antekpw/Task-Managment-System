@@ -37,7 +37,7 @@ public class User implements GeneralEntity<User> {
     @OneToMany(mappedBy = "idUser")
     private Set<Task> tasks = new LinkedHashSet<>();
 
-    @Override
+   @Override
     public void update(User source) {
 
     }

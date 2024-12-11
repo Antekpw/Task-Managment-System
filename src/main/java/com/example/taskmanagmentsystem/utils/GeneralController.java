@@ -2,7 +2,9 @@ package com.example.taskmanagmentsystem.utils;
 
 import com.example.taskmanagmentsystem.entities.Task;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,7 +20,9 @@ public class GeneralController<T extends GeneralEntity<T>> {
     public List<T> getAllEntities(T entity){
         return service.getAllEntities();
     }
-    @PostMapping("")
+    @PostMapping(path = "", consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional
     public ResponseEntity<T> create(@RequestBody T created){
         return ResponseEntity.ok(service.create(created));
     }
