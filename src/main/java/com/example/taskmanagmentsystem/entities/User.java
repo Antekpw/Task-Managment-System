@@ -1,6 +1,7 @@
 package com.example.taskmanagmentsystem.entities;
 
 import com.example.taskmanagmentsystem.utils.GeneralEntity;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Nationalized;
 
@@ -32,6 +33,7 @@ public class User implements GeneralEntity<User> {
     private String role;
 
     @OneToMany(mappedBy = "idUser")
+    @JsonManagedReference
     private Set<Project> projects = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "idUser")
@@ -39,7 +41,12 @@ public class User implements GeneralEntity<User> {
 
    @Override
     public void update(User source) {
-
+       setEmail(source.getEmail());
+       setPassword(source.getPassword());
+       setRole(source.getRole());
+       setProjects(source.getProjects());
+       setLogin(source.getLogin());
+       setTasks(source.getTasks());
     }
 
     public Long getId() {

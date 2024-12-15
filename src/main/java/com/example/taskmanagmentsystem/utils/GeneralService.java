@@ -1,11 +1,10 @@
 package com.example.taskmanagmentsystem.utils;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import jakarta.persistence.EntityNotFoundException;
+
 
 import java.util.List;
+import java.util.Optional;
 
 
 public class GeneralService<T extends GeneralEntity<T>> {
@@ -28,10 +27,18 @@ public class GeneralService<T extends GeneralEntity<T>> {
         repository.deleteById(id);
     }
 
-    @Transactional
-    public T create(T newDomain){
-        T dbDomain = newDomain.createNewInstance();
-        return repository.save(dbDomain);
+
+    public Optional<T> findByID(Long id){
+        System.out.println("szukam po id");
+        return repository.findById(id);
+    }
+    public T update(Long id,T updated){
+        repository.findById(id)
+                .map(exisitingEnitity -> {
+                    exisitingEnitity.update(updated);
+                    return repository.save(exisitingEnitity);
+                }).orElseThrow(()-> new EntityNotFoundException("Entity with id: " +  id+ " not found"));
+        return null;
     }
 }
 

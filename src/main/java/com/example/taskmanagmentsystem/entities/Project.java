@@ -1,6 +1,9 @@
 package com.example.taskmanagmentsystem.entities;
 
 import com.example.taskmanagmentsystem.utils.GeneralEntity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Nationalized;
 
@@ -25,13 +28,16 @@ public class Project implements GeneralEntity<Project> {
     private String description;
 
     @Column(name = "creation_date", nullable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "UTC")
     private Instant creationDate;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_user", nullable = false)
+    @JsonBackReference
     private User idUser;
 
-    @OneToMany(mappedBy = "idProject")
+    @OneToMany(mappedBy = "idProject",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Set<Task> tasks = new LinkedHashSet<>();
 
     @Override
