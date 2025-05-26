@@ -11,8 +11,8 @@ import java.time.Instant;
 public class Task implements GeneralEntity<Task> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Integer id;
+    @Column(name = "id_task", nullable = false)
+    private Long id;
 
     @Nationalized
     @Column(name = "name", nullable = false)
@@ -43,7 +43,7 @@ public class Task implements GeneralEntity<Task> {
     }
 
     public Long getId() {
-        return (long) id;
+        return id;
     }
 
     @Override
@@ -51,7 +51,7 @@ public class Task implements GeneralEntity<Task> {
         return null;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

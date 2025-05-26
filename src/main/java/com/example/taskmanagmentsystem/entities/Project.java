@@ -8,16 +8,17 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.Nationalized;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "PROJECTS")
+@Table(name = "projects",schema ="dbo")
 public class Project implements GeneralEntity<Project> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private Integer id;
+    private Long id;
 
     @Nationalized
     @Column(name = "name", nullable = false)
@@ -31,11 +32,12 @@ public class Project implements GeneralEntity<Project> {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "UTC")
     private Instant creationDate;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_user", nullable = false)
-    @JsonBackReference
-    private User idUser;
-
+//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+//    @JoinColumn(name = "id_user", nullable = true)
+//    @JsonBackReference
+//    private User idUser;
+@ManyToMany(mappedBy = "projects")
+private Set<User> sharedUsers = new HashSet<>();
     @OneToMany(mappedBy = "idProject",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     @JsonManagedReference
     private Set<Task> tasks = new LinkedHashSet<>();
@@ -46,7 +48,7 @@ public class Project implements GeneralEntity<Project> {
     }
 
     public Long getId() {
-        return (long)id;
+        return id;
     }
 
     @Override
@@ -54,7 +56,7 @@ public class Project implements GeneralEntity<Project> {
         return null;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -82,20 +84,26 @@ public class Project implements GeneralEntity<Project> {
         this.creationDate = creationDate;
     }
 
-    public User getIdUser() {
-        return idUser;
-    }
-
-    public void setIdUser(User idUser) {
-        this.idUser = idUser;
-    }
+//    public User getIdUser() {
+//        return idUser;
+//    }
+//
+//    public void setIdUser(User idUser) {
+//        this.idUser = idUser;
+//    }
 
     public Set<Task> getTasks() {
         return tasks;
+    }
+    public Set<User> getSharedUsers() {
+        return sharedUsers;
     }
 
     public void setTasks(Set<Task> tasks) {
         this.tasks = tasks;
     }
 
+    public void setSharedUsers(Set<User> sharedUsers) {
+        this.sharedUsers = sharedUsers;
+    }
 }

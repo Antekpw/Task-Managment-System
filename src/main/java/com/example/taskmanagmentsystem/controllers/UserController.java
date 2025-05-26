@@ -1,43 +1,56 @@
 package com.example.taskmanagmentsystem.controllers;
 
-
-import com.example.taskmanagmentsystem.Repositories.UserRepository;
-import com.example.taskmanagmentsystem.entities.Project;
-
-import com.example.taskmanagmentsystem.entities.User;
-import com.example.taskmanagmentsystem.services.ProjectService;
+import com.example.taskmanagmentsystem.dto.UserDto;
 import com.example.taskmanagmentsystem.services.UserService;
-import com.example.taskmanagmentsystem.utils.GeneralController;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
-public class UserController extends GeneralController<User> {
+public class UserController {
 
     private final UserService userService;
-    private final ProjectService projectservice;
 
-    public UserController(UserRepository userRepository, UserService userService, ProjectService projectService) {
-        super(userRepository);
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.projectservice = projectService;
     }
 
-    @PostMapping("/{id}/projects/{projectId}")
-    public ResponseEntity<User> assignUserToProject(@PathVariable Long id, @PathVariable Long projectId) {
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
+        UserDto user = userService.getUserById(id);
+        if (user != null) {
+            return ResponseEntity.ok(user);
+        }
+        return ResponseEntity.notFound().build();
+    }
 
-        Project project = projectservice.findByID(projectId)
-                .orElseThrow(() -> new EntityNotFoundException("Project with id: " + id + "not existing"));
-        User user = userService.findByID(id)
-                .orElseThrow(() -> new EntityNotFoundException("User with id: " + id + "not existing"));
-        user.getProjects().add(project);
-        project.setIdUser(user);
-        userService.createEntity(user);
-        return ResponseEntity.ok(user);
+    @GetMapping
+    public ResponseEntity<List<UserDto>> getAllUsers() {
+        List<UserDto> users = userService.findAll();
+        return ResponseEntity.ok(users);
+    }
+
+
+
+
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserDto> updateUser(@PathVariable Long id,
+                                              @RequestBody UserDto userDto) {
+        UserDto updatedUser = userService.updateUser(id, userDto);
+        if (updatedUser != null) {
+            return ResponseEntity.ok(updatedUser);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        if (userService.deleteUser(id)) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 }
-

@@ -1,10 +1,12 @@
 package com.example.taskmanagmentsystem.entities;
 
 import com.example.taskmanagmentsystem.utils.GeneralEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Nationalized;
 
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -13,8 +15,8 @@ import java.util.Set;
 public class User implements GeneralEntity<User> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Integer id;
+    @Column(name = "id_user", nullable = false)
+    private Long id;
 
     @Nationalized
     @Column(name = "login", nullable = false, length = 100)
@@ -32,11 +34,19 @@ public class User implements GeneralEntity<User> {
     @Column(name = "role", length = 100)
     private String role;
 
+//    @OneToMany(mappedBy = "idUser")
+//    @JsonManagedReference
+//    private Set<Project> projects = new LinkedHashSet<>();
+@ManyToMany
+@JoinTable(
+        name = "USER_PROJECTS",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "project_id")
+)
+@JsonIgnore
+private Set<Project> projects = new HashSet<>();
     @OneToMany(mappedBy = "idUser")
-    @JsonManagedReference
-    private Set<Project> projects = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "idUser")
+    @JsonIgnore
     private Set<Task> tasks = new LinkedHashSet<>();
 
    @Override
@@ -50,7 +60,7 @@ public class User implements GeneralEntity<User> {
     }
 
     public Long getId() {
-        return (long)id;
+        return id;
     }
 
     @Override
@@ -58,7 +68,7 @@ public class User implements GeneralEntity<User> {
         return null;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
