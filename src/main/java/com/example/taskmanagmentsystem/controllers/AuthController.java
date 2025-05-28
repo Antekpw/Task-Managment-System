@@ -70,12 +70,14 @@ public class AuthController {
         System.out.println("Logging in user: " + request.login());
         User user = userService.loginUser(request.login(), request.password());
         if (user != null) {
-            String token = jwtUtils.generateToken(user.getLogin());
+            String token = jwtUtils.generateToken(user.getLogin(),user.getRole());
             return ResponseEntity.ok(new AuthResponse(
                     token,
                     user.getId(),
                     user.getLogin(),
-                    user.getEmail()
+                    user.getEmail(),
+                    user.getRole()
+
             ));
         }
         return ResponseEntity.status(401).body("Błędny login lub hasło");
@@ -86,11 +88,12 @@ public class AuthController {
         User user = new User();
         user.setLogin(request.login());
         user.setPassword(passwordEncoder.encode(request.password()));
+        user.setRole("USER");
         System.out.println(passwordEncoder.encode(request.password()));
         user.setEmail(request.email());
         userService.registerUser(user);
 
-        String token = jwtUtils.generateToken(user.getLogin());
+        String token = jwtUtils.generateToken(user.getLogin(),user.getRole());
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put("token", token);
         responseBody.put("id", user.getId());
@@ -119,6 +122,6 @@ public class AuthController {
 
     public record RegisterRequest(String login, String password,String email) {}
     public record LoginRequest(String login, String password) {}
-    public record AuthResponse(String token, Long id, String login, String email) {}
+    public record AuthResponse(String token, Long id, String login, String email,String role) {}
     public record UserResponse(Long id, String login, String email) {}
 }

@@ -28,13 +28,13 @@ public class ProjectService {
     public List<ProjectDto> findAll() {
         return projectRepository.findAll()
                 .stream()
-                .map(this::toDto)
+                .map(ProjectService::toDto)
                 .collect(Collectors.toList());
     }
 
     public ProjectDto findById(Long id) {
         return projectRepository.findById(id)
-                .map(this::toDto)
+                .map(ProjectService::toDto)
                 .orElse(null);
     }
 
@@ -67,7 +67,7 @@ public class ProjectService {
     }
 
     // Ręczne mapowanie DTO <-> Entity
-    public ProjectDto toDto(Project project) {
+    public static ProjectDto toDto(Project project) {
         ProjectDto dto = new ProjectDto();
         dto.setId(project.getId());
         dto.setName(project.getName());
@@ -135,12 +135,12 @@ public class ProjectService {
     public List<ProjectDto> getProjectsByUserId(Long userId) {
         // Wersja 1: Jeśli projekty są przypisane przez sharedUsers
         List<Project> projects = projectRepository.findBySharedUsersId(userId);
-
+        System.out.println(projects.toString());
         // Wersja 2: Jeśli potrzebujesz również projekty, gdzie użytkownik jest właścicielem
         // List<Project> projects = projectRepository.findByOwnerIdOrSharedUsersId(userId, userId);
 
         return projects.stream()
-                .map(this::toDto)
+                .map(ProjectService::toDto)
                 .collect(Collectors.toList());
     }
 }

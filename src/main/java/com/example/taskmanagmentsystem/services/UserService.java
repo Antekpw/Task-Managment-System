@@ -1,6 +1,9 @@
 package com.example.taskmanagmentsystem.services;
 
+import com.example.taskmanagmentsystem.Repositories.ProjectRepository;
+import com.example.taskmanagmentsystem.dto.ProjectDto;
 import com.example.taskmanagmentsystem.dto.UserDto;
+import com.example.taskmanagmentsystem.entities.Project;
 import com.example.taskmanagmentsystem.entities.User;
 import com.example.taskmanagmentsystem.Repositories.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,10 +16,12 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final ProjectRepository projectRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, ProjectRepository projectRepository, PasswordEncoder passwordEncoder ){
         this.userRepository = userRepository;
+        this.projectRepository = projectRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -127,7 +132,12 @@ public class UserService {
     }
 
 
+    public List<ProjectDto> getProjectsByUserId(Long userId) {
+        List<Project> projects = projectRepository.findProjectsByUserId(userId);
 
-
+        return projects.stream()
+                .map(ProjectService::toDto)
+                .collect(Collectors.toList());
+    }
 
 }

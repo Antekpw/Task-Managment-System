@@ -2,6 +2,7 @@ package com.example.taskmanagmentsystem.config;
 import com.example.taskmanagmentsystem.utils.JwtUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -35,8 +36,10 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // bez sesji
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll() // publiczne endpointy
-                        .anyRequest().authenticated() // reszta wymaga JWT
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/projects/**", "/api/tasks/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/projects/**", "/api/tasks/**").hasRole("MANAGER")
+                        .anyRequest().authenticated() // wszystkie inne żądania wymagają uwierzytelnienia
                 )
                 .addFilterBefore(new JwtAuthFilter(jwtUtils), UsernamePasswordAuthenticationFilter.class);
 

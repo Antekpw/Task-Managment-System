@@ -15,6 +15,16 @@ public class TaskDto {
     private Long idUser;
     private Long idProject;
 
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
+    private String projectName;
+
     // --- Gettery i Settery ---
 
     public String getName() {
@@ -75,6 +85,8 @@ public class TaskDto {
         dto.setStatus(task.getStatus());
         dto.setIdUser(task.getIdUser() != null ? task.getIdUser().getId() : null);
         dto.setIdProject(task.getIdProject() != null ? task.getIdProject().getId() : null);
+        dto.setProjectName(task.getIdProject() != null ? task.getIdProject().getName() : null);
+
         return dto;
     }
 

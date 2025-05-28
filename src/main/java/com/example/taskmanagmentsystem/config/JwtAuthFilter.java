@@ -6,6 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
@@ -30,17 +31,22 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         if (token != null && jwtUtils.validateToken(token)) {
             String username = request.getParameter("username");
+
             try {
                 username = jwtUtils.getLoginFromToken(token);
+                String role = jwtUtils.getRoleFromToken(token);
+                var authorities = List.of(new SimpleGrantedAuthority("ROLE_" + role));
+                var authentication = new UsernamePasswordAuthenticationToken(
+                        username, null, authorities // pusta lista uprawnień
+                );
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
 
-            var authentication = new UsernamePasswordAuthenticationToken(
-                    username, null, List.of() // pusta lista uprawnień
-            );
 
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+
         }
         System.out.println("JWT Auth Filter: " + request.getRequestURI());
         filterChain.doFilter(request, response);
@@ -54,4 +60,5 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
         return null;
     }
+
 }

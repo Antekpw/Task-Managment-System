@@ -50,9 +50,10 @@ public class JwtUtils {
         return KeyFactory.getInstance("RSA").generatePublic(spec);
     }
 
-    public String generateToken(String login) throws Exception {
+    public String generateToken(String login,String role) throws Exception {
         return Jwts.builder()
                 .subject(login)
+                .claim("role", role) // Dodanie roli do tokena
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getPrivateKey(), Jwts.SIG.RS256) // Nowy sposób podpisu
@@ -79,5 +80,14 @@ public class JwtUtils {
                 .getPayload()
                 .getSubject(); // getSubject() z payloadu
     }
+    public String getRoleFromToken(String token) throws Exception {
+        return Jwts.parser()
+                .verifyWith(getPublicKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("role", String.class);
+    }
+
 
 }
