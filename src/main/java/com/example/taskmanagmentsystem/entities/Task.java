@@ -34,7 +34,7 @@ public class Task implements GeneralEntity<Task> {
     private User idUser;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_project", nullable = false)
+    @JoinColumn(name = "id_project",referencedColumnName = "id", nullable = false)
     private Project idProject;
 
     @Override

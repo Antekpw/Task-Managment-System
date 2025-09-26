@@ -113,7 +113,8 @@ public class AuthController {
                 return ResponseEntity.ok(new UserResponse(
                         user.getId(),
                         user.getLogin(),
-                        user.getEmail()
+                        user.getEmail(),
+                        user.getRole()
                 ));
             }
         }
@@ -123,5 +124,5 @@ public class AuthController {
     public record RegisterRequest(String login, String password,String email) {}
     public record LoginRequest(String login, String password) {}
     public record AuthResponse(String token, Long id, String login, String email,String role) {}
-    public record UserResponse(Long id, String login, String email) {}
+    public record UserResponse(Long id, String login, String email,String role) {}
 }

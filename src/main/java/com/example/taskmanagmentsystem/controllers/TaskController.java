@@ -43,8 +43,8 @@ public class TaskController  {
     public ResponseEntity<TaskDto> createTask(@RequestBody TaskDto dto) {
         System.out.println("Tworzenie zadania: " + dto.getName());
         System.out.println("Tworzenie zadania: " + dto.getDescription());
-        System.out.println("Tworzenie zadania: " + dto.getIdProject());
-        System.out.println("Tworzenie zadania: " + dto.getIdUser());
+        System.out.println("id projekt: " + dto.getIdProject());
+        System.out.println("Id user: " + dto.getIdUser());
 
         // ✅ Zapisz i zwróć
         Task createdTask = taskService.save(dto);

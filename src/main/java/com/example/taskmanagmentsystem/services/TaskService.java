@@ -44,6 +44,7 @@ public class TaskService {
         task.setName(dto.getName());
         task.setDescription(dto.getDescription());
         task.setStatus(dto.getStatus());
+        System.out.println(Instant.now());
         task.setCreationDate(Instant.now());
         task.setIdProject(project);
         task.setIdUser(user);
